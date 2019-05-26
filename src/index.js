@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom'
 import * as THREE from 'three/src/Three'
 import React, { useEffect, useRef, useMemo } from 'react'
-import { Canvas, useRender } from 'react-three-fiber'
+import { Canvas, useRender, useThree } from 'react-three-fiber'
 import { useSpring, animated } from 'react-spring/three'
 import './styles.css'
 
@@ -23,6 +23,13 @@ function getSphereConstants() {
 function Stars() {
   let group = useRef()
   let theta = 0
+
+  const { camera } = useThree()
+  useEffect(() => {
+    camera.far = 5000
+    camera.updateProjectionMatrix()
+  },[])
+
   useRender(() => {
     const r = 5 * Math.sin(THREE.Math.degToRad((theta += 0.01)))
     const s = Math.cos(THREE.Math.degToRad(theta * 2))
