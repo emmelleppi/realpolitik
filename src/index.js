@@ -2,13 +2,20 @@ import ReactDOM from 'react-dom'
 import * as THREE from 'three/src/Three'
 import React, { useEffect, useRef, useMemo } from 'react'
 import { Canvas, useRender, useThree } from 'react-three-fiber'
+import { TweenMax, Elastic, Circ } from 'gsap'
 import { useSpring, animated } from 'react-spring/three'
 import './styles.css'
 
 const faces = ['/img/berlusca.png', '/img/renzi.png', '/img/salvini.png', '/img/meloni.png', '/img/dimaio.png']
 
-function getInitialPosition() {
-  return Math.random() * 2000 - 1000
+function getInitialXPosition() {
+  return Math.random() * 50 - 25
+}
+function getInitialYPosition() {
+  return Math.random() * 50 - 25
+}
+function getInitialZPosition() {
+  return Math.random() * 500
 }
 function getRandomUnity() {
   return Math.random() * 2 - 1 
@@ -21,20 +28,63 @@ function getSphereConstants() {
 }
 
 function Stars() {
-  let group = useRef()
-  let theta = 0
-
-  const { camera } = useThree()
+  const group = useRef()
+  const { camera, gl } = useThree()
   useEffect(() => {
+    gl.setPixelRatio(window.devicePixelRatio)
+    gl.alpha = 0
     camera.far = 5000
     camera.updateProjectionMatrix()
+    camera.position.setX(5)
+    camera.position.setY(-5)
+    camera.position.setZ(100)
+
+    TweenMax
+      .to(
+        group.current.scale,
+        10,
+        { 
+          x: 0,
+          y: 0,
+          z: 0,
+          yoyo: true,
+          repeat: -1,
+          ease: Elastic.easeIn.config(1, 0.5),
+        })
+    TweenMax
+      .to(
+        camera.position,
+        100,
+        { 
+          z: 1,
+          yoyo: true,
+          repeat: -1,
+          ease: Elastic.easeIn.config(1, 0.5),
+        })
+    TweenMax
+      .to(
+        camera.position,
+        100,
+        { 
+          x: -5,
+          yoyo: true,
+          repeat: -1,
+          ease: Circ.easeInOut,
+        })
+    TweenMax
+      .to(
+        camera.position,
+        100,
+        { 
+          y: 5,
+          yoyo: true,
+          repeat: -1,
+          ease: -Circ.easeInOut,
+        })
+
   },[])
 
   useRender(() => {
-    const r = 5 * Math.sin(THREE.Math.degToRad((theta += 0.01)))
-    const s = Math.cos(THREE.Math.degToRad(theta * 2))
-    group.current.rotation.set(r, r, r)
-    group.current.scale.set(s, s, s)
     group.current.children.forEach(child => {
       const { position, radius, defaultPosition, angle, sphereCostants } = child
       angle.value += 0.001
@@ -54,10 +104,12 @@ function Stars() {
         new THREE.SpriteMaterial({
           map: sprite,
           color: 0xffffff,
-          sizeAttenuation: true
+          sizeAttenuation: true,
+          transparent: false,
+          alphaTest: 0.5,
         })
     )
-    const coords = new Array(5000).fill().map(i => [getInitialPosition(), getInitialPosition(), getInitialPosition()])
+    const coords = new Array(10000).fill().map(i => [getInitialXPosition(), getInitialYPosition(), getInitialZPosition()])
     return [vertices, coords, spriteMaterial]
   }, [])
 
@@ -65,7 +117,7 @@ function Stars() {
     <group ref={group}>
       {coords.map(([p1, p2, p3], i) => {
         const faceToShow = i % spriteMaterial.length
-        return <sprite key={i} radius={100} angle={{value: Math.random() * 2 * Math.PI}} material={spriteMaterial[faceToShow]} position={[p1, p2, p3]} defaultPosition={new THREE.Vector3(p1, p2, p3)} sphereCostants={getSphereConstants()} scale={[15, 15]} />
+        return <sprite key={i} radius={10} angle={{value: Math.random() * 2 * Math.PI}} material={spriteMaterial[faceToShow]} position={[p1, p2, p3]} defaultPosition={new THREE.Vector3(p1, p2, p3)} sphereCostants={getSphereConstants()} />
       })}
     </group>
   )
