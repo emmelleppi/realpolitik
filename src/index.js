@@ -3,7 +3,6 @@ import * as THREE from 'three/src/Three'
 import React, { useEffect, useRef, useMemo } from 'react'
 import { Canvas, useRender, useThree } from 'react-three-fiber'
 import { TweenMax, Power4, RoughEase, Circ } from 'gsap'
-import { useSpring, animated } from 'react-spring/three'
 import './styles.css'
 
 const faces = ['/img/berlusca.png', '/img/renzi.png', '/img/salvini.png', '/img/meloni.png', '/img/dimaio.png']
@@ -115,8 +114,6 @@ function Stars() {
 
 ReactDOM.render(
   <Canvas>
-    <ambientLight color="lightblue" />
-    <pointLight color="white" intensity={1} position={[10, 10, 10]} />
     <Stars />
   </Canvas>,
   document.getElementById('root')
