@@ -1,5 +1,5 @@
 {
-  "name": "react-three-fiber-react-spring",
+  "name": "realpolitik",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -9,7 +9,6 @@
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-scripts": "2.1.5",
-    "react-spring": "8.0.19",
     "react-three-fiber": "2.0.0",
     "three": "0.101.1"
   },
