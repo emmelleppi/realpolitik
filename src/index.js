@@ -60,7 +60,7 @@ function Stars() {
     TweenMax
       .to(
         camera.position,
-        60,
+        300,
         { 
           z: 1,
           yoyo: true,
