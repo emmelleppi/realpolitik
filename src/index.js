@@ -19,7 +19,7 @@ function getInitialYPosition() {
   return Math.random() * 50 - 25
 }
 function getInitialZPosition() {
-  return Math.random() * 300
+  return Math.random() * 500
 }
 function getRandomUnity() {
   return Math.random() * 2 - 1 
@@ -41,7 +41,7 @@ function Stars() {
     camera.far = 5000
     camera.fov = 30
     camera.updateProjectionMatrix()
-    camera.position.setZ(250)
+    camera.position.setZ(300)
 
     setInterval(() => TweenMax
     .to(
@@ -99,7 +99,7 @@ function Stars() {
           alphaTest: 0.5,
         })
     )
-    const coords = new Array(5000).fill().map(i => [getInitialXPosition(), getInitialYPosition(), getInitialZPosition()])
+    const coords = new Array(10000).fill().map(i => [getInitialXPosition(), getInitialYPosition(), getInitialZPosition()])
     return [vertices, coords, spriteMaterial]
   }, [])
 
