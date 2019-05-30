@@ -12,10 +12,10 @@ function getCustomEase() {
 }
 
 function getInitialXPosition() {
-  return Math.random() * 50 - 25
+  return Math.random() * 80 - 40
 }
 function getInitialYPosition() {
-  return Math.random() * 50 - 25
+  return Math.random() * 80 - 40
 }
 function getInitialZPosition() {
   return Math.random() * 500
@@ -40,12 +40,12 @@ function Stars() {
     camera.far = 5000
     camera.fov = 30
     camera.updateProjectionMatrix()
-    camera.position.setZ(300)
+    camera.position.setZ(450)
 
     setInterval(() => TweenMax
     .to(
       group.current.scale,
-      5,
+      3,
       { 
         x: 0,
         y: 0,
@@ -54,14 +54,14 @@ function Stars() {
         repeat: 1,
         ease: Power4.easeIn,
       })
-      , 35000)
+      , 63000)
 
     TweenMax
       .to(
         camera.position,
         300,
         { 
-          z: 1,
+          z: 200,
           yoyo: true,
           repeat: -1,
           ease: getCustomEase()
@@ -76,7 +76,7 @@ function Stars() {
 
     group.current.children.forEach(child => {
       const { position, radius, defaultPosition, angle, sphereCostants } = child
-      angle.value += 0.002
+      angle.value += 0.0005
       angle.value %= 360
       position.set(
         defaultPosition.x + radius * Math.sin(angle.value) * sphereCostants[0].x + radius * Math.cos(angle.value) * sphereCostants[1].x,
