@@ -12,13 +12,13 @@ function getCustomEase() {
 }
 
 function getInitialXPosition() {
-  return Math.random() * 80 - 40
+  return Math.random() * 60 - 30
 }
 function getInitialYPosition() {
-  return Math.random() * 80 - 40
+  return Math.random() * 60 - 30
 }
 function getInitialZPosition() {
-  return Math.random() * 500
+  return Math.random() * 400
 }
 function getRandomUnity() {
   return Math.random() * 2 - 1 
@@ -30,18 +30,22 @@ function getSphereConstants() {
   return [getRandomVector3(), getRandomVector3()]
 }
 
+function getAngleComponents(angle) {
+  return [Math.sin(angle), Math.cos(angle)]
+}
+
 function Stars() {
   let theta = 0
   const group = useRef()
-  const { camera, gl } = useThree()
+  const { camera, gl, scene } = useThree()
   useEffect(() => {
     gl.setPixelRatio(window.devicePixelRatio)
     gl.alpha = 0
-    camera.far = 5000
+    camera.far = 1000
     camera.fov = 30
     camera.updateProjectionMatrix()
-    camera.position.setZ(450)
-
+    camera.position.setZ(350)
+    scene.fog = new THREE.Fog(0, 1, 700)
     setInterval(() => TweenMax
     .to(
       group.current.scale,
@@ -61,7 +65,7 @@ function Stars() {
         camera.position,
         300,
         { 
-          z: 200,
+          z: 150,
           yoyo: true,
           repeat: -1,
           ease: getCustomEase()
@@ -74,17 +78,19 @@ function Stars() {
     const r = 5 * Math.sin(THREE.Math.degToRad(theta))
     group.current.rotation.set(0, 0, r)
 
-    group.current.children.forEach(child => {
+    for (const child of group.current.children) {
       const { position, radius, defaultPosition, angle, sphereCostants } = child
       angle.value += 0.0005
       angle.value %= 360
+      const [angleSin, angleCos] = getAngleComponents(angle.value)
+      const radAngleSin = radius * angleSin
+      const radAngleCos = radius * angleCos
       position.set(
-        defaultPosition.x + radius * Math.sin(angle.value) * sphereCostants[0].x + radius * Math.cos(angle.value) * sphereCostants[1].x,
-        defaultPosition.y + radius * Math.sin(angle.value) * sphereCostants[0].y + radius * Math.cos(angle.value) * sphereCostants[1].y,
-        defaultPosition.z + radius * Math.sin(angle.value) * sphereCostants[0].z + radius * Math.cos(angle.value) * sphereCostants[1].z,
+        defaultPosition.x + radAngleSin * sphereCostants[0].x + radAngleCos * sphereCostants[1].x,
+        defaultPosition.y + radAngleSin * sphereCostants[0].y + radAngleCos * sphereCostants[1].y,
+        defaultPosition.z + radAngleSin * sphereCostants[0].z + radAngleCos * sphereCostants[1].z,
       )
-    
-    })
+    }
   })
   const [vertices, coords, spriteMaterial] = useMemo(() => {
     const spriteMap = faces.map(face => new THREE.TextureLoader().load(face))
@@ -98,7 +104,7 @@ function Stars() {
           alphaTest: 0.5,
         })
     )
-    const coords = new Array(10000).fill().map(i => [getInitialXPosition(), getInitialYPosition(), getInitialZPosition()])
+    const coords = new Array(7000).fill().map(i => [getInitialXPosition(), getInitialYPosition(), getInitialZPosition()])
     return [vertices, coords, spriteMaterial]
   }, [])
 
