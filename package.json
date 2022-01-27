@@ -10,7 +10,7 @@
     "react-dom": "16.8.3",
     "react-scripts": "2.1.5",
     "react-three-fiber": "2.0.0",
-    "three": "0.101.1"
+    "three": "0.137.0"
   },
   "devDependencies": {},
   "scripts": {
